@@ -1,0 +1,49 @@
+[user]
+    name = Ng Ho Chi
+    email = nghochi123@gmail.com
+[core]
+    editor = vim
+    excludesFile = ~/.gitignore_global
+    pager = delta
+[alias]
+    lg = log --graph --date=relative --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ad)%Creset'
+    ll = log --oneline
+    st = status
+    semantic-commit = "!f() { git commit -m \"$(git diff --staged | llm -t semantic_commit)\"; }; f"
+[pull]
+    rebase = true
+[push]
+    autoSetupRemote = true
+[fetch]
+    prune = true
+    pruneTags = true
+[pager]
+    branch = false
+[rerere]
+    enabled = true
+[rebase]
+    autostash = true
+    updateRefs = true
+[init]
+    defaultBranch = main
+[diff]
+    algorithm = histogram
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+    syntax-theme = Dracula
+    minus-style = syntax "#3f2d3d"
+    minus-emph-style = syntax "#763842"
+    plus-style = syntax "#2d3f2d"
+    plus-emph-style = syntax "#2e6b30"
+
+[tag]
+    sort = version:refname
+
+[branch]
+    sort = -committerdate

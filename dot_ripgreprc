@@ -1,0 +1,14 @@
+--max-columns=150
+--max-columns-preview
+
+--type-add
+web:*.{html,css,js}*
+
+--glob=!git/*
+
+--glob
+!git/*
+
+--colors=line:style:bold
+
+--smart-case

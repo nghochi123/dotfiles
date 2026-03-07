@@ -22,7 +22,7 @@ if ! exist cargo; then
 fi
 
 # Install oh my tmux
-if !exist tm; then
+if ! exist tm; then
     curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh#$(date +%s)" | bash
 fi
 

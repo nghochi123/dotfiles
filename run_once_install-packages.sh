@@ -50,6 +50,6 @@ cargo install lsd --locked
 cargo install atuin --locked
 
 # Install mise
-cargo install mise --features openssl/vendored
+cargo install mise --features openssl/vendored --locked
 
 log "Done."

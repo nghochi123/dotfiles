@@ -72,3 +72,11 @@ require("lazy").setup("plugins", {
         },
     },
 })
+
+-- Automatically save files before running CMake commands
+vim.api.nvim_create_autocmd("User", {
+    pattern = "CMake*Pre",
+    callback = function()
+        vim.cmd("wa")
+    end,
+})

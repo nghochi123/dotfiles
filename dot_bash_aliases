@@ -1,5 +1,6 @@
 alias cat='bat --paging=never'
 alias cd='z'
+alias cdp='zi'
 alias vim='nvim'
 alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
 alias ls='lsd'
@@ -13,3 +14,12 @@ glog(){
             --bind 'enter:execute(git show --color=always {1} | delta | less -R)' \
             --preview-window=right 60%
 }
+
+function frg {
+  command rg --color=always --line-number --no-heading --smart-case "${*:-}" \
+  | command fzf -d':' --ansi \
+    --preview "command bat -p --color=always {1} --highlight-line {2}" \
+    --preview-window ~8,+{2}-5 \
+  | awk -F':' '{print $1}'
+}
+

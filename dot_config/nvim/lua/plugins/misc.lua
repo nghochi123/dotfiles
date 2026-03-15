@@ -160,7 +160,23 @@ return {
   {
     "Civitasv/cmake-tools.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {},
+    opts = {
+        cmake_build_before_run = true,
+        cmake_executor = {
+            name = "toggleterm",
+            opts = {
+                direction = "horizontal", -- or "float"
+                close_on_exit = false,
+                }
+            },
+        cmake_runner = {
+            name = "toggleterm",
+            opts = {
+                direction = "horizontal",
+                singleton = true, -- Reuses the same terminal window
+            }
+        },
+    },
     keys = {
       { "<leader>mb", "<cmd>CMakeBuild<cr>",  desc = "CMake: Build" },
       { "<leader>mr", "<cmd>CMakeRun<cr>",    desc = "CMake: Run" },

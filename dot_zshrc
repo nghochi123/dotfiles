@@ -46,3 +46,5 @@ bindkey '^[[D'    backward-char                 # left       move cursor one cha
 bindkey '^[[C'    forward-char                  # right      move cursor one char forward
 bindkey '^[[A'    up-line-or-beginning-search   # up         prev command in history
 bindkey '^[[B'    down-line-or-beginning-search # down       next command in history
+
+eval "$(zoxide init zsh)"

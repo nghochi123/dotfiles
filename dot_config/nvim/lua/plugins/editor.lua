@@ -18,8 +18,8 @@ return {
     {
         "numToStr/Comment.nvim",
         keys = {
-            { "gcc", mode = "n", desc = "Comment toggle current line" },
-            { "gc", mode = { "n", "v" }, desc = "Comment toggle" },
+            { "gcc", mode = "n",          desc = "Comment toggle current line" },
+            { "gc",  mode = { "n", "v" }, desc = "Comment toggle" },
         },
         config = function()
             require("Comment").setup()
@@ -38,4 +38,22 @@ return {
     },
 
     { "tpope/vim-repeat", event = { "BufReadPost", "BufNewFile" } },
+
+    -- --------------------------------------------------------------------------
+    -- Multiple cursors (Ctrl+D select next, Ctrl+L select all, cursor up/down)
+    -- --------------------------------------------------------------------------
+    {
+        "mg979/vim-visual-multi",
+        branch = "master",
+        event = { "BufReadPost", "BufNewFile" },
+        init = function()
+            vim.g.VM_maps = {
+                ["Find Under"]         = "<C-d>",
+                ["Find Subword Under"] = "<C-d>",
+                ["Select All"]         = "<C-l>",
+                ["Add Cursor Down"]    = "<M-Down>",
+                ["Add Cursor Up"]      = "<M-Up>",
+            }
+        end,
+    },
 }

@@ -80,3 +80,28 @@ vim.api.nvim_create_autocmd("User", {
         vim.cmd("wa")
     end,
 })
+
+-- --------------------------------------------------------------------------
+-- Keymaps (VSCode-familiar)
+-- --------------------------------------------------------------------------
+
+-- Comment with Ctrl+/
+vim.keymap.set("n", "<C-/>", "gcc", { remap = true, desc = "Comment toggle line" })
+vim.keymap.set("v", "<C-/>", "gc", { remap = true, desc = "Comment toggle" })
+
+-- Move lines with Alt+Up/Down
+vim.keymap.set("n", "<A-Down>", "<cmd>m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-Up>", "<cmd>m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Duplicate lines with Alt+Shift+Up/Down
+vim.keymap.set("n", "<A-S-Down>", "<cmd>t .<CR>", { desc = "Duplicate line down" })
+vim.keymap.set("n", "<A-S-Up>", "<cmd>t .-1<CR>", { desc = "Duplicate line up" })
+vim.keymap.set("v", "<A-S-Down>", ":'<,'>t '><CR>gv", { desc = "Duplicate selection down" })
+vim.keymap.set("v", "<A-S-Up>", ":'<,'>t '<-1<CR>gv", { desc = "Duplicate selection up" })
+
+-- Tab / Shift+Tab to indent and keep selection
+vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent and reselect" })
+vim.keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent and reselect" })
+

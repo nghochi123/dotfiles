@@ -1,5 +1,5 @@
 . "$HOME/.cargo/env"
 
-if [[ $- == *i* && -f ~/.bashrc]]; then
+if [[ $- == *i* && -f ~/.bashrc ]]; then
     . ~/.bashrc
 fi

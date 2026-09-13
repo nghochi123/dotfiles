@@ -51,8 +51,9 @@ return {
                 ["Find Under"]         = "<C-d>",
                 ["Find Subword Under"] = "<C-d>",
                 ["Select All"]         = "<C-l>",
-                ["Add Cursor Down"]    = "<M-Down>",
-                ["Add Cursor Up"]      = "<M-Up>",
+                ["Visual All"]         = "<C-l>",
+                ["Add Cursor Down"]    = "<M-S-Down>",
+                ["Add Cursor Up"]      = "<M-S-Up>",
             }
         end,
     },

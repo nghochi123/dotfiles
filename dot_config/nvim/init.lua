@@ -39,7 +39,7 @@ opt.fileencoding = "utf-8"
 opt.history = 500
 
 vim.diagnostic.config({
-    virtual_text = true,
+    virtual_text = false,
     signs = true,
     underline = true,
     severity_sort = true,
@@ -84,23 +84,20 @@ require("lazy").setup("plugins", {
     },
 })
 
--- Diagnostics work for both LSP and standalone linters.
+-- Diagnostics use the same mappings before and after an LSP attaches.
 vim.keymap.set("n", "<leader>D", function()
     require("telescope.builtin").diagnostics()
 end, { desc = "Diagnostics (workspace)" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Diagnostic (line)" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "<leader>tv", function()
+    local enabled = vim.diagnostic.config().virtual_text ~= false
+    vim.diagnostic.config({ virtual_text = not enabled })
+    vim.notify("Inline diagnostics " .. (enabled and "off" or "on"))
+end, { desc = "Toggle inline diagnostics" })
 
 require("run").setup()
-
--- Automatically save files before running CMake commands
-vim.api.nvim_create_autocmd("User", {
-    pattern = "CMake*Pre",
-    callback = function()
-        vim.cmd("wa")
-    end,
-})
 
 -- --------------------------------------------------------------------------
 -- Keymaps (VSCode-familiar)
@@ -109,18 +106,15 @@ vim.api.nvim_create_autocmd("User", {
 -- Comment with Ctrl+/
 vim.keymap.set("n", "<C-/>", "gcc", { remap = true, desc = "Comment toggle line" })
 vim.keymap.set("v", "<C-/>", "gc", { remap = true, desc = "Comment toggle" })
+-- Many terminals encode Ctrl+/ as Ctrl+_.
+vim.keymap.set("n", "<C-_>", "gcc", { remap = true, desc = "Comment toggle line" })
+vim.keymap.set("v", "<C-_>", "gc", { remap = true, desc = "Comment toggle" })
 
 -- Move lines with Alt+Up/Down
 vim.keymap.set("n", "<A-Down>", "<cmd>m .+1<CR>==", { desc = "Move line down" })
 vim.keymap.set("n", "<A-Up>", "<cmd>m .-2<CR>==", { desc = "Move line up" })
 vim.keymap.set("v", "<A-Down>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 vim.keymap.set("v", "<A-Up>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
-
--- Duplicate lines with Alt+Shift+Up/Down
-vim.keymap.set("n", "<A-S-Down>", "<cmd>t .<CR>", { desc = "Duplicate line down" })
-vim.keymap.set("n", "<A-S-Up>", "<cmd>t .-1<CR>", { desc = "Duplicate line up" })
-vim.keymap.set("v", "<A-S-Down>", ":'<,'>t '><CR>gv", { desc = "Duplicate selection down" })
-vim.keymap.set("v", "<A-S-Up>", ":'<,'>t '<-1<CR>gv", { desc = "Duplicate selection up" })
 
 -- Tab / Shift+Tab to indent and keep selection
 vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent and reselect" })

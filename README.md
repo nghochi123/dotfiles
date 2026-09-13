@@ -40,10 +40,15 @@ provisioned separately. A Nerd Font is recommended for the configured prompt.
 
 The comma key is the leader. Use `,D` for workspace diagnostics, `,d` for the
 diagnostic under the cursor, and `[d`/`]d` to move between diagnostics. Trouble
-provides `,xd` for the current buffer and `,xw` for the workspace.
+provides `,xd` for the current buffer and `,xw` for the workspace. Diagnostic
+signs and underlines are always visible; `,tv` toggles messages at the end of
+each affected line.
 
-Use `,r` or `:RunFile` to save and run the current file in a terminal split.
-Python, Lua, JavaScript, TypeScript, shell, Ruby, Perl, PHP, Vim, Go, Makefiles,
-C, C++, and Rust are supported when their interpreter or compiler is installed.
-Use the existing `,mb`/`,mr` mappings for CMake projects and the function keys
-for debugger sessions.
+Use `,r` or `:RunFile` to save and run the current Python file in a terminal
+split. Use `,l` or `:RuffCheck` to check it with Ruff; the Mason-installed Ruff
+is preferred, with `uvx ruff check` as a fallback.
+
+In normal or visual mode, Ctrl-D selects the next matching occurrence and
+Ctrl-L selects all occurrences. Alt-Shift-Down/Up adds cursors vertically.
+Enter accepts a completion only after one has been selected; otherwise it
+inserts a newline. Tab retains its normal indentation behavior.

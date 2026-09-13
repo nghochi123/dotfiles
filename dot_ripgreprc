@@ -4,8 +4,6 @@
 --type-add
 web:*.{html,css,js}*
 
---glob=!git/*
-
 --glob
 !git/*
 

@@ -1,11 +1,29 @@
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-source ~/.bash_aliases
+# Keep PATH stable when opening nested shells or reloading this file.
+export BUN_INSTALL="$HOME/.bun"
+typeset -U path
+path=("$HOME/.local/bin" "$BUN_INSTALL/bin" "$HOME/.cargo/bin" "$HOME/.fzf/bin" $path)
+export PATH
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export PATH="$HOME/.local/bin:$PATH"
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=20000
+SAVEHIST=10000
+setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_REDUCE_BLANKS
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Initialize completion independently of optional tools such as Bun.
+autoload -Uz compinit
+compinit
+
+[[ ! -r "$HOME/.bash_aliases" ]] || source "$HOME/.bash_aliases"
+if (( $+commands[zoxide] )); then
+    eval "$(zoxide init zsh)"
+    alias cd='z'
+    alias cdp='zi'
+fi
+
+if (( $+commands[fzf] )); then
+    source <(fzf --zsh)
+fi
 
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
 bindkey -s '^[OM' '^M'  # enter
@@ -47,4 +65,14 @@ bindkey '^[[C'    forward-char                  # right      move cursor one cha
 bindkey '^[[A'    up-line-or-beginning-search   # up         prev command in history
 bindkey '^[[B'    down-line-or-beginning-search # down       next command in history
 
-eval "$(zoxide init zsh)"
+# Keep prefix search on Up; use Atuin for Ctrl-R after fzf sets its bindings.
+if (( $+commands[atuin] )); then
+    eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
+[[ ! -s "$BUN_INSTALL/_bun" ]] || source "$BUN_INSTALL/_bun"
+
+if [[ -r "$HOME/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    source "$HOME/powerlevel10k/powerlevel10k.zsh-theme"
+    [[ ! -r "$HOME/.p10k.zsh" ]] || source "$HOME/.p10k.zsh"
+fi

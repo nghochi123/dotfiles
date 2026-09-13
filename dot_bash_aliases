@@ -1,25 +1,26 @@
-alias cat='bat --paging=never'
-alias cd='z'
-alias cdp='zi'
-alias vim='nvim'
+command -v bat >/dev/null 2>&1 && alias cat='bat --paging=never'
+command -v nvim >/dev/null 2>&1 && alias vim='nvim'
 alias fp='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
-alias ls='lsd'
+command -v lsd >/dev/null 2>&1 && alias ls='lsd'
 alias rm='rm -I'
-alias gpf='git push --force'
+alias gpf='git push --force-with-lease'
+alias away='~/.local/bin/away-mode.sh'
+alias home='~/.local/bin/home-mode.sh'
+command -v lazygit >/dev/null 2>&1 && alias lg='lazygit'
 
 glog(){
     git log --oneline --color=always "$@" | 
         fzf --ansi --no-sort --reverse \
             --preview 'git show --color=always {1} | delta --width=${FZF_PREVIEW_COLUMNS:-$COLUMNS}' \
             --bind 'enter:execute(git show --color=always {1} | delta | less -R)' \
-            --preview-window=right 60%
+            --preview-window=right:60%
 }
 
 function frg {
   command rg --color=always --line-number --no-heading --smart-case "${*:-}" \
   | command fzf -d':' --ansi \
     --preview "command bat -p --color=always {1} --highlight-line {2}" \
-    --preview-window ~8,+{2}-5 \
+    --preview-window '~8,+{2}-5' \
   | awk -F':' '{print $1}'
 }
 

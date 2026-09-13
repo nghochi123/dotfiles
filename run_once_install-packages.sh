@@ -1,55 +1,93 @@
-#!/bin/sh
+#!/bin/bash
+set -euo pipefail
 
 exist() {
     command -v "$1" > /dev/null 2>&1
 }
 
 log() {
-    printf "\033[1;36m%s\033[0m %s\n" "$(date +%H:%M:%S)" $1
+    printf '\033[1;36m%s\033[0m %s\n' "$(date +%H:%M:%S)" "$1"
 }
 
-log "Running..."
+# Fresh-machine system packages are supported on Fedora (dnf).
+install_system() {
+    local executable="$1" package="$2"
+    if ! exist "$executable"; then
+        if ! exist dnf; then
+            printf 'Install %s with your system package manager, then rerun chezmoi apply.\n' "$package" >&2
+            exit 1
+        fi
+        sudo dnf install -y "$package"
+    fi
+}
 
-# Install fzf
-if ! exist fzf; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
-fi
+install_cargo() {
+    local executable="$1" package="$2"
+    shift 2
+    if ! exist "$executable"; then
+        cargo install "$package" --locked "$@"
+    fi
+}
 
-# Install cargo
+log "Installing missing dependencies..."
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.fzf/bin:$PATH"
+
+install_system git git
+install_system curl curl
+install_system cc gcc
+install_system c++ gcc-c++
+install_system make make
+install_system pkg-config pkgconf-pkg-config
+install_system zsh zsh
+install_system tmux tmux
+install_system nvim neovim
+install_system btop btop
+install_system lazygit lazygit
+install_system jq jq
+
 if ! exist cargo; then
-    curl https://sh.rustup.rs -sSf | sh
+    installer=$(mktemp)
+    trap 'rm -f "$installer"' EXIT
+    curl -fsSL https://sh.rustup.rs -o "$installer"
+    sh "$installer" -y --no-modify-path
+fi
+if [[ -r "$HOME/.cargo/env" ]]; then
+    . "$HOME/.cargo/env"
 fi
 
-# Install oh my tmux
-if ! exist tm; then
-    curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh#$(date +%s)" | bash
+if ! exist fzf; then
+    if [[ ! -d "$HOME/.fzf" ]]; then
+        git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
+    fi
+    # Shell integration lives in our managed rc files.
+    "$HOME/.fzf/install" --bin
 fi
 
-# Install neovim
+if [[ ! -r "$HOME/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    git clone --depth 1 https://github.com/romkatv/powerlevel10k.git "$HOME/powerlevel10k"
+fi
 
-# Install fd
-cargo install fd-find --locked
+# Test the installed files, not a nonexistent `tm` executable.
+if [[ ! -r "$HOME/.tmux/.tmux.conf" ]]; then
+    git clone --depth 1 https://github.com/gpakosz/.tmux.git "$HOME/.tmux"
+fi
+if [[ ! -e "$HOME/.tmux.conf" && ! -L "$HOME/.tmux.conf" ]]; then
+    ln -s .tmux/.tmux.conf "$HOME/.tmux.conf"
+fi
+if [[ ! -e "$HOME/.tmux.conf.local" && ! -L "$HOME/.tmux.conf.local" ]]; then
+    cp "$HOME/.tmux/.tmux.conf.local" "$HOME/.tmux.conf.local"
+fi
 
-# Install bat
-cargo install bat --locked
-
-# Install ripgrep
-cargo install ripgrep --locked
-
-# Install zoxide
-cargo install zoxide --locked
-
-# Install delta
-cargo install git-delta --locked
-
-# Install lsd
-cargo install lsd --locked
-
-# Install atuin
-cargo install atuin --locked
-
-# Install mise
-cargo install mise --features openssl/vendored --locked
+install_cargo fd fd-find
+install_cargo bat bat
+install_cargo rg ripgrep
+install_cargo zoxide zoxide
+install_cargo delta git-delta
+install_cargo lsd lsd
+install_cargo atuin atuin
+install_cargo mise mise --features openssl/vendored
+install_cargo yazi yazi-fm
+install_cargo ya yazi-cli
+install_cargo dust du-dust
 
 log "Done."

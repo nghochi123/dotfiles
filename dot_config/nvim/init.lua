@@ -38,6 +38,17 @@ opt.fileencoding = "utf-8"
 
 opt.history = 500
 
+vim.diagnostic.config({
+    virtual_text = true,
+    signs = true,
+    underline = true,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = "if_many",
+    },
+})
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -73,6 +84,16 @@ require("lazy").setup("plugins", {
     },
 })
 
+-- Diagnostics work for both LSP and standalone linters.
+vim.keymap.set("n", "<leader>D", function()
+    require("telescope.builtin").diagnostics()
+end, { desc = "Diagnostics (workspace)" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Diagnostic (line)" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+
+require("run").setup()
+
 -- Automatically save files before running CMake commands
 vim.api.nvim_create_autocmd("User", {
     pattern = "CMake*Pre",
@@ -104,4 +125,3 @@ vim.keymap.set("v", "<A-S-Up>", ":'<,'>t '<-1<CR>gv", { desc = "Duplicate select
 -- Tab / Shift+Tab to indent and keep selection
 vim.keymap.set("v", "<Tab>", ">gv", { desc = "Indent and reselect" })
 vim.keymap.set("v", "<S-Tab>", "<gv", { desc = "Unindent and reselect" })
-

@@ -35,3 +35,15 @@ PATH entries are deduplicated in Zsh, and optional integrations are guarded.
 The `gpf` alias uses `git push --force-with-lease`.
 `away` and `home` refer to machine-local scripts in `~/.local/bin` that must be
 provisioned separately. A Nerd Font is recommended for the configured prompt.
+
+## Neovim
+
+The comma key is the leader. Use `,D` for workspace diagnostics, `,d` for the
+diagnostic under the cursor, and `[d`/`]d` to move between diagnostics. Trouble
+provides `,xd` for the current buffer and `,xw` for the workspace.
+
+Use `,r` or `:RunFile` to save and run the current file in a terminal split.
+Python, Lua, JavaScript, TypeScript, shell, Ruby, Perl, PHP, Vim, Go, Makefiles,
+C, C++, and Rust are supported when their interpreter or compiler is installed.
+Use the existing `,mb`/`,mr` mappings for CMake projects and the function keys
+for debugger sessions.
